@@ -18,7 +18,7 @@ class Car {
   fuel_type: string;
 
   @Column()
-  transmission: string;
+  transmission_type: string;
 
   @Column()
   max_velocity: number;
