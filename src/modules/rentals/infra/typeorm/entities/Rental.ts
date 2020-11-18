@@ -16,13 +16,26 @@ class Rental {
   id: string;
 
   @Column()
+  car_id: string;
+
+  @Column()
+  client_id: string;
+
+  @Column('timestamp with time zone')
+  start_date: Date;
+
+  @Column('timestamp with time zone')
+  end_date: Date;
+
+  @Column()
   total: number;
 
   @OneToOne(type => Car)
-  @JoinColumn()
+  @JoinColumn({ name: 'car_id' })
   car: Car;
 
   @ManyToOne(() => User, user => user.rentals)
+  @JoinColumn({ name: 'client_id' })
   user: User;
 }
 

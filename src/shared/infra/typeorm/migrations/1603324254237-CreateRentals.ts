@@ -41,7 +41,7 @@ export default class CreateRentals1603324254237 implements MigrationInterface {
           {
             name: 'total',
             type: 'decimal',
-            precision: 5,
+            precision: 7,
             scale: 2,
             isNullable: false,
           },
