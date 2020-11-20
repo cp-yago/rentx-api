@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-
+import { classToClass } from 'class-transformer';
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import JWTProvider from '@modules/users/infra/providers/JWTProvider';
@@ -21,6 +21,6 @@ export default class SessionsController {
 
     const user = await authenticateUser.execute({ email, password });
 
-    return response.status(201).send(user);
+    return response.status(201).send(classToClass(user));
   }
 }
