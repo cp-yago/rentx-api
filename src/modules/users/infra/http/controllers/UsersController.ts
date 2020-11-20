@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-
+import { classToClass } from 'class-transformer';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import CreateUserService from '@modules/users/services/CreateUserService';
+import UpdateUserService from '@modules/users/services/UpdateUserService';
 
 export default class UsersController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -20,8 +21,29 @@ export default class UsersController {
       admin,
     });
 
-    console.log('UsersController');
+    delete user.password;
 
-    return response.status(201).json(user);
+    return response.status(201).json(classToClass(user));
+  }
+
+  public async update(request: Request, response: Response): Promise<Response> {
+    const usersRepository = new UsersRepository();
+    const updateUser = new UpdateUserService(usersRepository);
+
+    const { name, email, password, admin, avatar } = request.body;
+    // eslint-disable-next-line prefer-destructuring
+    const id = request.user.id;
+    const user = await updateUser.execute({
+      id,
+      name,
+      email,
+      password,
+      admin,
+      avatar,
+    });
+
+    delete user.password;
+
+    return response.status(200).json(classToClass(user));
   }
 }

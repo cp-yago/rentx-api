@@ -2,6 +2,7 @@ import { getRepository, Repository } from 'typeorm';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
 
 class UsersRepository implements IUsersRepository {
@@ -27,6 +28,46 @@ class UsersRepository implements IUsersRepository {
     const user = this.ormRepository.create(userData);
 
     return await this.ormRepository.save(user);
+  }
+
+  public async update({
+    id,
+    name,
+    email,
+    password,
+    admin,
+    avatar,
+  }: IUpdateUserDTO): Promise<User> {
+    const user = await this.ormRepository.findOne(id);
+
+    if (!user) {
+      throw new Error('User does not found');
+    }
+
+    const updatedUser = await this.ormRepository.save({
+      id,
+      name,
+      email,
+      password,
+      admin,
+      avatar,
+    });
+
+    console.log('updatedUser: ', updatedUser);
+
+    return updatedUser;
+  }
+
+  public async deleteAvatar(id: string): Promise<void> {
+    const user = await this.ormRepository.findOne(id);
+
+    if (!user) {
+      throw new Error('User does not found');
+    }
+
+    user.avatar = '';
+
+    await this.ormRepository.save(user);
   }
 
   public async save(user: User): Promise<User> {
